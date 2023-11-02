@@ -9,15 +9,19 @@ async def read_from_queue(queue):
         # Возвращаем элемент как результат генератора
         yield item
 
-# Создаем очередь asyncio
-queue = asyncio.Queue()
-# Добавляем несколько элементов в очередь
-queue.put_nowait("Hello")
-queue.put_nowait("World")
-queue.put_nowait("!")
 
-# Создаем асинхронный генератор из очереди
-generator = read_from_queue(queue)
-# Проходим по элементам генератора с помощью цикла for
-async for item in generator:
-    print(item)
+async def asy():
+    # Создаем очередь asyncio
+    queue = asyncio.Queue()
+    # Добавляем несколько элементов в очередь
+    queue.put_nowait("Hello")
+    queue.put_nowait("World")
+    queue.put_nowait("!")
+    # Создаем асинхронный генератор из очереди
+    generator = read_from_queue(queue)
+    # Проходим по элементам генератора с помощью цикла for
+    async for item in generator:
+        print(item)
+
+
+asyncio.run(asy())
