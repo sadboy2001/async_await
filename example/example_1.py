@@ -4,44 +4,44 @@ import os
 
 
 async def download_file(url, folder):
-    # Создаем имя файла из последней части URL
+    # РЎРѕР·РґР°РµРј РёРјСЏ С„Р°Р№Р»Р° РёР· РїРѕСЃР»РµРґРЅРµР№ С‡Р°СЃС‚Рё URL
     filename = url.split("/")[-1]
-    # Создаем путь к файлу в локальной папке
+    # РЎРѕР·РґР°РµРј РїСѓС‚СЊ Рє С„Р°Р№Р»Сѓ РІ Р»РѕРєР°Р»СЊРЅРѕР№ РїР°РїРєРµ
     filepath = os.path.join(folder, filename)
-    # Создаем асинхронный клиент для HTTP-запросов
+    # РЎРѕР·РґР°РµРј Р°СЃРёРЅС…СЂРѕРЅРЅС‹Р№ РєР»РёРµРЅС‚ РґР»СЏ HTTP-Р·Р°РїСЂРѕСЃРѕРІ
     async with aiohttp.ClientSession() as session:
-        # Отправляем GET-запрос по URL
+        # РћС‚РїСЂР°РІР»СЏРµРј GET-Р·Р°РїСЂРѕСЃ РїРѕ URL
         async with session.get(url) as response:
-            # Проверяем статус ответа
+            # РџСЂРѕРІРµСЂСЏРµРј СЃС‚Р°С‚СѓСЃ РѕС‚РІРµС‚Р°
             if response.status == 200:
-                # Читаем данные из ответа по частям
+                # Р§РёС‚Р°РµРј РґР°РЅРЅС‹Рµ РёР· РѕС‚РІРµС‚Р° РїРѕ С‡Р°СЃС‚СЏРј
                 with open(filepath, "wb") as file:
                     async for chunk in response.content.iter_chunked(1024):
-                        # Записываем данные в файл
+                        # Р—Р°РїРёСЃС‹РІР°РµРј РґР°РЅРЅС‹Рµ РІ С„Р°Р№Р»
                         file.write(chunk)
-                print(f"Файл {filename} успешно скачан")
+                print(f"Р¤Р°Р№Р» {filename} СѓСЃРїРµС€РЅРѕ СЃРєР°С‡Р°РЅ")
             else:
-                print(f"Ошибка при скачивании файла {filename}: {response.status}")
+                print(f"РћС€РёР±РєР° РїСЂРё СЃРєР°С‡РёРІР°РЅРёРё С„Р°Р№Р»Р° {filename}: {response.status}")
 
 
-# Создаем список URL для скачивания
+# РЎРѕР·РґР°РµРј СЃРїРёСЃРѕРє URL РґР»СЏ СЃРєР°С‡РёРІР°РЅРёСЏ
 urls = [
     "https://upload.wikimedia.org/wikipedia/commons/3/3f/Fronalpstock_big.jpg",
     "https://upload.wikimedia.org/wikipedia/commons/d/dd/Big_%26_Small_Pumkins.JPG",
     "https://upload.wikimedia.org/wikipedia/commons/6/6e/Golde33443.jpg"
 ]
 
-# Создаем имя папки для сохранения файлов
+# РЎРѕР·РґР°РµРј РёРјСЏ РїР°РїРєРё РґР»СЏ СЃРѕС…СЂР°РЅРµРЅРёСЏ С„Р°Р№Р»РѕРІ
 folder = "downloads"
 
-# Создаем папку, если она не существует
+# РЎРѕР·РґР°РµРј РїР°РїРєСѓ, РµСЃР»Рё РѕРЅР° РЅРµ СЃСѓС‰РµСЃС‚РІСѓРµС‚
 if not os.path.exists(folder):
     os.mkdir(folder)
 
-# Создаем список задач для скачивания файлов
+# РЎРѕР·РґР°РµРј СЃРїРёСЃРѕРє Р·Р°РґР°С‡ РґР»СЏ СЃРєР°С‡РёРІР°РЅРёСЏ С„Р°Р№Р»РѕРІ
 tasks = [download_file(url, folder) for url in urls]
 
-# Получаем цикл событий
+# РџРѕР»СѓС‡Р°РµРј С†РёРєР» СЃРѕР±С‹С‚РёР№
 loop = asyncio.get_event_loop()
-# Запускаем все задачи параллельно и ждем их завершения
+# Р—Р°РїСѓСЃРєР°РµРј РІСЃРµ Р·Р°РґР°С‡Рё РїР°СЂР°Р»Р»РµР»СЊРЅРѕ Рё Р¶РґРµРј РёС… Р·Р°РІРµСЂС€РµРЅРёСЏ
 loop.run_until_complete(asyncio.gather(*tasks))
